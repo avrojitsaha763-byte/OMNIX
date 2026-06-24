@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — 10-Min Quick Commerce</title>
+  <meta name="description" content="Hyperlocal, automated replenishment of daily essentials and groceries in under 10 minutes.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .qc-container {
+      max-width: var(--container-max);
+      margin: 100px auto 60px;
+      padding: 0 24px;
+    }
+
+    /* Hero QC */
+    .qc-hero {
+      position: relative;
+      padding: 64px 32px;
+      background: radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.15) 0%, rgba(10, 10, 15, 1) 80%), url('assets/images/hero-bg.png') no-repeat center center/cover;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      margin-bottom: 48px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .qc-eta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: var(--radius-full);
+      color: var(--cyan-light);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .eta-timer {
+      font-family: var(--font-mono);
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 800;
+      color: var(--cyan-light);
+      margin-top: 12px;
+    }
+
+    /* Live Tracking Console */
+    .tracking-console {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-cyan);
+    }
+
+    /* Stock Level styling */
+    .stock-indicator {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 12px;
+    }
+
+    .stock-bar {
+      height: 6px;
+      background: var(--color-surface-3);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .stock-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+    }
+
+    /* AI Pantry Switch */
+    .pantry-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+    }
+
+    /* Quick Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--color-surface-3);
+      transition: .4s;
+      border-radius: 24px;
+      border: 1px solid var(--color-border);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--cyan);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="omnix-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">⚡</div>
+        <span>OMNIX</span>
+      </a>
+      <div class="nav-links">
+        <a href="marketplace.html" class="nav-link">🛒 Marketplace</a>
+        <a href="quick-commerce.html" class="nav-link">⚡ Quick</a>
+        <a href="social-commerce.html" class="nav-link">📱 Social</a>
+        <a href="ai-agent.html" class="nav-link">🤖 AI Agent</a>
+        <a href="b2b.html" class="nav-link">🏭 B2B</a>
+        <a href="creator-hub.html" class="nav-link">🎨 Creator</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-search" onclick="document.getElementById('searchModal').classList.add('open')">
+          <span>🔍 Search OMNIX...</span>
+        </div>
+        <button class="nav-cart" id="cartBtn" onclick="toggleCart()">
+          <span>🛒</span>
+          <span id="cartCount" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="qc-container">
+    
+    <!-- Hero Header -->
+    <header class="qc-hero">
+      <div>
+        <div class="qc-eta-badge">⚡ Hyperlocal Sourcing Stream</div>
+        <h1 style="font-family:var(--font-display); font-size:clamp(32px, 5vw, 56px); font-weight:900; line-height:1.1; margin-bottom:16px;">10 Minutes to Your Door</h1>
+        <p style="color:var(--text-secondary); font-size:16px; max-width:540px; margin-bottom:24px;">Groceries, medical kits, and daily essentials packed & dispatched instantly. Supported by automated dark stores.</p>
+        
+        <div style="display:flex; gap:12px; align-items:center;">
+          <select class="input" style="max-width:180px; border-radius:100px; height:44px; padding:0 20px; font-weight:600;" onchange="showToast('📍 Region changed to selected area.', 'info')">
+            <option>📍 Mumbai West</option>
+            <option>📍 Bengaluru Indiranagar</option>
+            <option>📍 Delhi NCR Central</option>
+          </select>
+          <span style="font-size:14px; color:var(--text-muted);">ETA averages: <strong>9.2 mins</strong></span>
+        </div>
+      </div>
+      
+      <!-- Live ETA timer -->
+      <div class="tracking-console">
+        <div style="font-size:12px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Current active dispatch ETA</div>
+        <div class="eta-timer" id="etaTimer">08:24</div>
+        <div style="font-size:13px; color:var(--text-secondary); margin-top:8px;">Rider #4802 (Ramesh K.) is packing supplies.</div>
+        
+        <!-- Live Mini Tracker Step -->
+        <div class="delivery-track" style="margin-top:20px; padding: 10px 0;">
+          <div class="track-step done">
+            <div class="track-dot">✓</div>
+            <div class="track-label">Ordered</div>
+          </div>
+          <div class="track-step done">
+            <div class="track-dot">✓</div>
+            <div class="track-label">Packed</div>
+          </div>
+          <div class="track-step active">
+            <div class="track-dot">🏍️</div>
+            <div class="track-label">Dispatched</div>
+          </div>
+          <div class="track-step">
+            <div class="track-dot">🏠</div>
+            <div class="track-label">Delivered</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stylized Live Map Grid -->
+    <section class="panel-card" style="margin-bottom:48px; border-color: rgba(6, 182, 212, 0.3);">
+      <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px; display:flex; align-items:center; gap:8px;">🗺️ Hyperlocal Live Tracking Grid <span class="badge badge-cyan" style="animation:pulseLive 2s infinite;">Live</span></h3>
+      <div style="height:240px; background:var(--color-surface-2); border-radius:var(--radius-lg); border:1px solid var(--color-border); overflow:hidden;">
+        <div class="map-grid" id="mapGrid">
+          <!-- 240 block cells will be generated by JS -->
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px; text-align:center;">🟢 Rider coordinates moving toward your location (🟣). 🟠 Sourcing Dark Store location.</p>
+    </section>
+
+    <!-- Categories grid -->
+    <section style="margin-bottom:48px;">
+      <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:24px;">Browse Hyperlocal Pantry</h3>
+      <div class="category-grid" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));">
+        <div class="category-pill" onclick="showToast('Browsing Dairy section', 'info')"><span class="category-pill-icon">🥛</span><span class="category-pill-label">Dairy & Eggs</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Vegetables section', 'info')"><span class="category-pill-icon">🥦</span><span class="category-pill-label">Vegetables</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Fruits section', 'info')"><span class="category-pill-icon">🍎</span><span class="category-pill-label">Fresh Fruits</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Medicine section', 'info')"><span class="category-pill-icon">💊</span><span class="category-pill-label">Pharmacy Kit</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Personal Care section', 'info')"><span class="category-pill-icon">🧴</span><span class="category-pill-label">Personal Care</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Meat & Fish section', 'info')"><span class="category-pill-icon">🥩</span><span class="category-pill-label">Meat & Fish</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Beverages section', 'info')"><span class="category-pill-icon">☕</span><span class="category-pill-label">Beverages</span></div>
+        <div class="category-pill" onclick="showToast('Browsing Bakery section', 'info')"><span class="category-pill-icon">🍞</span><span class="category-pill-label">Bakery</span></div>
+      </div>
+    </section>
+
+    <!-- Core Two Columns: Flash Restock + AI Pantry -->
+    <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:32px;">
+      
+      <!-- Flash Restock -->
+      <section class="panel-card">
+        <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:20px;">Hot Restocks & Fast Deals</h3>
+        
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:20px;">
+          <!-- Product 1 -->
+          <div class="product-card" style="border-radius:var(--radius-lg);" onclick="addToCart('qc1', 'Organic Cow Milk 1L', 'Amul', 85, '🥛')">
+            <div class="product-card-image" style="font-size:40px; height:120px;">🥛</div>
+            <div class="product-card-body" style="padding:12px;">
+              <div class="product-card-name" style="font-size:13px;">Amul Organic Cow Milk 1L</div>
+              <div style="font-size:14px; font-weight:700; color:white;">₹85</div>
+              <div class="stock-indicator">
+                <div class="stock-bar"><div class="stock-fill" style="width: 15%; background: var(--rose);"></div></div>
+                <div style="font-size:10px; color:var(--rose); font-weight:700; margin-top:2px;">Only 4 left in stock!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="product-card" style="border-radius:var(--radius-lg);" onclick="addToCart('qc2', 'Fresh Onions 1kg', 'VeggieFarm', 60, '🧅')">
+            <div class="product-card-image" style="font-size:40px; height:120px;">🧅</div>
+            <div class="product-card-body" style="padding:12px;">
+              <div class="product-card-name" style="font-size:13px;">Fresh Onions 1kg</div>
+              <div style="font-size:14px; font-weight:700; color:white;">₹60</div>
+              <div class="stock-indicator">
+                <div class="stock-bar"><div class="stock-fill" style="width: 80%; background: var(--emerald);"></div></div>
+                <div style="font-size:10px; color:var(--text-muted); margin-top:2px;">In Stock</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="product-card" style="border-radius:var(--radius-lg);" onclick="addToCart('qc3', 'Premium Curd 500g', 'Mother Dairy', 70, '🍧')">
+            <div class="product-card-image" style="font-size:40px; height:120px;">🍧</div>
+            <div class="product-card-body" style="padding:12px;">
+              <div class="product-card-name" style="font-size:13px;">Mother Dairy Premium Curd</div>
+              <div style="font-size:14px; font-weight:700; color:white;">₹70</div>
+              <div class="stock-indicator">
+                <div class="stock-bar"><div class="stock-fill" style="width: 8%; background: var(--rose);"></div></div>
+                <div style="font-size:10px; color:var(--rose); font-weight:700; margin-top:2px;">Critical Low (2 left)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 4 -->
+          <div class="product-card" style="border-radius:var(--radius-lg);" onclick="addToCart('qc4', 'Brown Bread 400g', 'English Oven', 55, '🍞')">
+            <div class="product-card-image" style="font-size:40px; height:120px;">🍞</div>
+            <div class="product-card-body" style="padding:12px;">
+              <div class="product-card-name" style="font-size:13px;">English Oven Brown Bread</div>
+              <div style="font-size:14px; font-weight:700; color:white;">₹55</div>
+              <div class="stock-indicator">
+                <div class="stock-bar"><div class="stock-fill" style="width: 60%; background: var(--amber);"></div></div>
+                <div style="font-size:10px; color:var(--amber); font-weight:700; margin-top:2px;">12 left in stock</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Pantry Management -->
+      <section class="panel-card" style="border-color:rgba(16, 185, 129, 0.3);">
+        <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px;">🤖 AI Pantry Control</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:20px;">Cognitive calculations tracking pantry cycles and auto-replenishing orders.</p>
+        
+        <div class="pantry-item">
+          <div>
+            <div style="font-weight:700; font-size:13px;">🥛 Organic Cow Milk</div>
+            <div style="font-size:11px; color:var(--rose); margin-top:2px;">Predicted run out: 1 day left</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked onchange="showToast('Autoreorder for milk configured', 'success')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="pantry-item">
+          <div>
+            <div style="font-weight:700; font-size:13px;">🌾 Basmati Rice 5kg</div>
+            <div style="font-size:11px; color:var(--amber); margin-top:2px;">Predicted run out: 5 days left</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" onchange="showToast('Autoreorder for rice configured', 'success')">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="pantry-item">
+          <div>
+            <div style="font-weight:700; font-size:13px;">🌻 Cooking Sunflower Oil</div>
+            <div style="font-size:11px; color:var(--rose); margin-top:2px;">Predicted run out: 2 days left</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" checked onchange="showToast('Autoreorder for oil configured', 'success')">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Universal Footer -->
+  <footer style="background: var(--color-deep); border-top: 1px solid var(--color-border); padding: 80px 0 30px; margin-top: 80px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 24px; max-width: var(--container-max); margin: 0 auto;">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom: 16px;">
+          <div class="nav-logo-icon">⚡</div>
+          <span>OMNIX</span>
+        </a>
+        <p class="footer-brand-desc">The universal commerce operating layer. Powering consumer transactions, quick-delivery routes, B2B wholesale pipelines, and creator platforms globally.</p>
+      </div>
+      <div class="footer-links-col">
+        <h5>Operating Modules</h5>
+        <a href="marketplace.html" class="footer-link">🛒 Consumer Marketplace</a>
+        <a href="quick-commerce.html" class="footer-link">⚡ Hyperlocal Quick</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/omnix-core.js"></script>
+  <script>
+    // Live Rider map tracking simulation
+    const grid = document.getElementById('mapGrid');
+    const cols = 20;
+    const rows = 12;
+    
+    // Sourcing Dark store node coordinates
+    const storeNode = { r: 3, c: 3 };
+    // User node coordinates
+    const userNode = { r: 9, c: 15 };
+    // Active rider coordinates starting near store
+    let riderNode = { r: 3, c: 4 };
+
+    // Build the grid blocks
+    const cells = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const block = document.createElement('div');
+        block.className = 'map-block';
+        
+        // Define simple roads pathway
+        if (r === 3 || r === 9 || c === 3 || c === 15) {
+          block.classList.add('road');
+        }
+        
+        // Add nodes
+        if (r === storeNode.r && c === storeNode.c) {
+          block.classList.add('store');
+          block.title = "OMNIX Dark Store";
+        }
+        
+        if (r === userNode.r && c === userNode.c) {
+          block.style.background = "var(--violet)";
+          block.style.borderRadius = "50%";
+          block.title = "Your Location";
+        }
+
+        grid.appendChild(block);
+        cells.push({ r, c, element: block });
+      }
+    }
+
+    // Animate rider path
+    setInterval(() => {
+      // Clear previous rider
+      cells.forEach(cell => cell.element.classList.remove('rider'));
+      
+      // Calculate next step towards user
+      if (riderNode.c < userNode.c) {
+        riderNode.c++;
+      } else if (riderNode.r < userNode.r) {
+        riderNode.r++;
+      } else {
+        // Reset rider back to store
+        riderNode = { r: 3, c: 4 };
+        showToast('🛵 Rider delivered the package! Restocking...', 'success');
+      }
+
+      // Draw rider node
+      const currentRiderCell = cells.find(c => c.r === riderNode.r && c.c === riderNode.c);
+      if (currentRiderCell) {
+        currentRiderCell.element.classList.add('rider');
+      }
+    }, 2000);
+
+    // Live ETA countdown
+    const etaTimer = document.getElementById('etaTimer');
+    let etaSecs = 8 * 60 + 24;
+    setInterval(() => {
+      if (etaSecs <= 0) etaSecs = 10 * 60;
+      etaSecs--;
+      const mins = Math.floor(etaSecs / 60).toString().padStart(2, '0');
+      const secs = (etaSecs % 60).toString().padStart(2, '0');
+      etaTimer.textContent = `${mins}:${secs}`;
+    }, 1000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — Creator Sourcing Hub</title>
+  <meta name="description" content="Manage your custom storefront, monetize digital files, analyze audience metrics, and deploy AI content models.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    body {
+      background-color: var(--color-void);
+      display: flex;
+    }
+
+    /* Fixed Left Sidebar */
+    .dashboard-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--color-space);
+      border-right: 1px solid var(--color-border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 22px;
+      margin-bottom: 32px;
+      padding-left: 8px;
+    }
+
+    .sidebar-nav-group {
+      margin-bottom: 24px;
+    }
+
+    .sidebar-nav-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      padding-left: 12px;
+    }
+
+    .sidebar-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .sidebar-nav-link:hover, .sidebar-nav-link.active {
+      color: #34D399;
+      background: var(--emerald-dim);
+    }
+
+    .sidebar-user-card {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Main Content Wrapper */
+    .dashboard-main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-width: 0;
+      padding: 40px;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    /* Creator Profile Card in Header */
+    .creator-profile-header {
+      background: var(--grad-emerald);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .creator-profile-header::before {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    /* Custom Layout Grid for Dashboard Cards */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .dashboard-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .custom-table th {
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--color-border);
+      text-transform: uppercase;
+      font-size: 11px;
+    }
+
+    .custom-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--text-secondary);
+    }
+
+    .custom-table tr:hover {
+      background: var(--color-surface-2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Panel -->
+  <aside class="dashboard-sidebar">
+    <div>
+      <div class="sidebar-logo">
+        <div class="nav-logo-icon" style="width:32px; height:32px; font-size:16px;">⚡</div>
+        <span class="text-gradient">OMNIX</span>
+      </div>
+
+      <!-- Navigation groups -->
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-title">Creator Center</div>
+        <a href="creator-hub.html" class="sidebar-nav-link active">🎨 Overview</a>
+        <a href="#" class="sidebar-nav-link" onclick="showToast('Loading digital products list...', 'info')">💾 My Storefront</a>
+        <a href="#" class="sidebar-nav-link" onclick="showToast('Loading active affiliate links...', 'info')">🔗 Affiliate Links</a>
+        <a href="#" class="sidebar-nav-link" onclick="showToast('Loading content metrics...', 'info')">📊 Content Analytics</a>
+      </div>
+
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-title">Sourcing Hub</div>
+        <a href="marketplace.html" class="sidebar-nav-link">🛒 Consumer Marketplace</a>
+        <a href="social-commerce.html" class="sidebar-nav-link">📱 Social Feed</a>
+        <a href="dashboard.html" class="sidebar-nav-link">📊 User Profile</a>
+      </div>
+    </div>
+
+    <!-- User bottom info -->
+    <div class="sidebar-user-card">
+      <div style="width:36px; height:36px; background:var(--grad-brand); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px;">P</div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:12px; font-weight:700; color:white;">Priya Sharma</div>
+        <div style="font-size:10px; color:#34D399; font-weight:700;">Design Specialist</div>
+      </div>
+      <span class="order-status-dot delivered" style="width:10px; height:10px;"></span>
+    </div>
+  </aside>
+
+  <!-- Main Content Console -->
+  <main class="dashboard-main">
+    
+    <!-- Top Creator Profile Header -->
+    <div class="creator-profile-header">
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div style="width:80px; height:80px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; border:4px solid rgba(255,255,255,0.2);">👩</div>
+        <div>
+          <h1 style="font-family:var(--font-display); font-size:24px; font-weight:800; color:white;">Priya Sharma — Fashion Creator</h1>
+          <p style="font-size:13px; color:var(--text-secondary); margin-top:4px;">@priya.styles • Verified OMNIX Partner ✅ • Joined June 2025</p>
+          <div style="display:flex; gap:16px; margin-top:8px; font-size:12px; color:var(--text-secondary);">
+            <span><strong>2.4M</strong> Followers</span>
+            <span>•</span>
+            <span><strong>840</strong> Following</span>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px; color:var(--text-secondary);">Est. payout next cycle</div>
+        <div style="font-size:28px; font-weight:800; color:white;">₹3,24,890</div>
+        <button class="btn btn-sm btn-ghost" style="margin-top:8px; background:rgba(255,255,255,0.1); border:none; color:white;" onclick="showToast('💸 Transferring funds to main wallet...', 'info')">Withdraw Funds</button>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-value">₹3,24,890</div>
+        <div class="stat-card-label">Total Monthly Earnings</div>
+        <div class="stat-card-change up">↑ 24.2% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">₹87,240</div>
+        <div class="stat-card-label">Affiliate Commission</div>
+        <div class="stat-card-change up">↑ 15% from fashion tags</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">₹1,12,000</div>
+        <div class="stat-card-label">Digital Products</div>
+        <div class="stat-card-change up">112 styling guides sold</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-value">₹48,000</div>
+        <div class="stat-card-label">Memberships</div>
+        <div class="stat-card-change up">96 premium subscribers</div>
+      </div>
+    </div>
+
+    <!-- Core Layout Section -->
+    <div class="dashboard-grid">
+      <!-- LEFT COL -->
+      <div class="dashboard-col">
+        
+        <!-- Creator Storefront -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:20px;">My Digital Storefront</h3>
+          
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
+            <!-- E-Book -->
+            <div class="product-card" onclick="showToast('Styling guide selected', 'info')">
+              <div class="product-card-image" style="font-size:36px; height:110px;">📚</div>
+              <div class="product-card-body" style="padding:12px;">
+                <div class="product-card-name">Summer Styling E-Book</div>
+                <div style="font-size:14px; font-weight:700; color:white;">₹999</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">112 sold • ₹1,11,888 gross</div>
+              </div>
+            </div>
+
+            <!-- Consultation -->
+            <div class="product-card" onclick="showToast('Consultation session selected', 'info')">
+              <div class="product-card-image" style="font-size:36px; height:110px;">📅</div>
+              <div class="product-card-body" style="padding:12px;">
+                <div class="product-card-name">1-on-1 Styling Call</div>
+                <div style="font-size:14px; font-weight:700; color:white;">₹2,499</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">24 sessions • ₹59,976 gross</div>
+              </div>
+            </div>
+
+            <!-- Curated bundle -->
+            <div class="product-card" onclick="showToast('Bundle selected', 'info')">
+              <div class="product-card-image" style="font-size:36px; height:110px;">📦</div>
+              <div class="product-card-body" style="padding:12px;">
+                <div class="product-card-name">Boho Styling Look bundle</div>
+                <div style="font-size:14px; font-weight:700; color:white;">₹6,498</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">12 bundles sold • 8% affiliate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Affiliate links table -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Active Affiliate Placements</h3>
+          <div class="table-container">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Commission Rate</th>
+                  <th>Clicks</th>
+                  <th>Conversions</th>
+                  <th>Total Earned</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>👗 Boho Stylist Dress</td>
+                  <td>8%</td>
+                  <td>12,400 clicks</td>
+                  <td>312 buys</td>
+                  <td style="color:#34D399; font-weight:700;">₹62,376</td>
+                </tr>
+                <tr>
+                  <td>👜 Premium Leather Bag</td>
+                  <td>5%</td>
+                  <td>8,200 clicks</td>
+                  <td>120 buys</td>
+                  <td style="color:#34D399; font-weight:700;">₹23,994</td>
+                </tr>
+                <tr>
+                  <td>🧴 Hydrating Face Serum</td>
+                  <td>10%</td>
+                  <td>4,100 clicks</td>
+                  <td>84 buys</td>
+                  <td style="color:#34D399; font-weight:700;">₹5,870</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AI Creator assistant chat stub -->
+        <div class="panel-card" style="border-color: rgba(16, 185, 129, 0.3);">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:8px; display:flex; align-items:center; gap:8px;">🤖 AI Creator Assistant</h3>
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Request visual trends, posting windows, and script suggestions for upcoming campaigns.</p>
+          
+          <div style="background:var(--color-surface-2); border:1px solid var(--color-border); border-radius:var(--radius-lg); padding:16px; margin-bottom:16px;">
+            <div style="font-size:11px; font-weight:700; color:#34D399; text-transform:uppercase; margin-bottom:6px;">Suggested Campaign Ideas</div>
+            <div style="font-size:13px; color:white; line-height:1.5; margin-bottom:8px;">💡 <strong>Summer Boho Look:</strong> Reels promoting the Boho bundle are experiencing a 42% click-through growth in Mumbai. Post between 6 PM - 8 PM.</div>
+            <div style="font-size:13px; color:white; line-height:1.5;">💡 <strong>Skincare Routine:</strong> Introduce the Hydrating Face Serum during your upcoming live stream broadcast. Unlocks an extra 2% affiliate bonus.</div>
+          </div>
+          
+          <div class="input-wrapper">
+            <input type="text" id="aiCreatorQuery" class="input" placeholder="Ask AI: 'What styling theme is trending in Mumbai today?'..." onkeyup="if(event.key==='Enter') showToast('🤖 Analyzing fashion trends database...', 'info')">
+            <button class="btn btn-cyan btn-sm" onclick="showToast('🤖 Analyzing database trends...', 'info')">Query</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COL -->
+      <div class="dashboard-col">
+        
+        <!-- Monetization Options -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Monetize Storefront</h3>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div class="quick-action" style="flex-direction:row; justify-content:flex-start; gap:16px; text-align:left; padding:12px 16px;" onclick="showToast('Adding product upload portal...', 'info')">
+              <span style="font-size:24px;">📁</span>
+              <div>
+                <div style="font-weight:700; font-size:13px; color:white;">Sell Digital Files</div>
+                <div style="font-size:10px; color:var(--text-muted);">PDF guides, templates, Lightroom presets</div>
+              </div>
+            </div>
+
+            <div class="quick-action" style="flex-direction:row; justify-content:flex-start; gap:16px; text-align:left; padding:12px 16px;" onclick="showToast('Affiliate directory loading...', 'info')">
+              <span style="font-size:24px;">🔗</span>
+              <div>
+                <div style="font-weight:700; font-size:13px; color:white;">Ecosystem Affiliates</div>
+                <div style="font-size:10px; color:var(--text-muted);">Tag items directly in content streams</div>
+              </div>
+            </div>
+
+            <div class="quick-action" style="flex-direction:row; justify-content:flex-start; gap:16px; text-align:left; padding:12px 16px;" onclick="showToast('Membership configuration loading...', 'info')">
+              <span style="font-size:24px;">💎</span>
+              <div>
+                <div style="font-weight:700; font-size:13px; color:white;">Fan Memberships</div>
+                <div style="font-size:10px; color:var(--text-muted);">Unlock member streams and styling sheets</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audience Demographics -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Audience Demographics</h3>
+          
+          <div style="display:flex; flex-direction:column; gap:12px; font-size:12px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>India (Top cities: Mumbai, Delhi, BLR)</span>
+                <strong>72%</strong>
+              </div>
+              <div class="stock-bar"><div class="stock-fill" style="width: 72%; background: #34D399;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>United States (Top cities: NYC, LA)</span>
+                <strong>14%</strong>
+              </div>
+              <div class="stock-bar"><div class="stock-fill" style="width: 14%; background: #34D399;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span>United Kingdom (Top cities: London)</span>
+                <strong>8%</strong>
+              </div>
+              <div class="stock-bar"><div class="stock-fill" style="width: 8%; background: #34D399;"></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="js/omnix-core.js"></script>
+</body>
+</html>

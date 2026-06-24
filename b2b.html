@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — B2B Sourcing Marketplace</title>
+  <meta name="description" content="Secure raw materials, request factory quotes, and secure commercial lines of credit directly through verified global suppliers.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .b2b-container {
+      max-width: var(--container-max);
+      margin: 100px auto 60px;
+      padding: 0 24px;
+    }
+
+    /* B2B Theme: Amber Glow */
+    .b2b-hero {
+      position: relative;
+      padding: 64px 32px;
+      background: radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.1) 0%, rgba(10, 10, 15, 1) 80%), url('assets/images/hero-bg.png') no-repeat center center/cover;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      margin-bottom: 48px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .b2b-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-full);
+      color: var(--amber-light);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Tabs Component */
+    .tabs-row {
+      display: flex;
+      gap: 12px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 1px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-item {
+      padding: 12px 24px;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-item:hover, .tab-item.active {
+      color: var(--amber-light);
+      border-bottom-color: var(--amber);
+    }
+
+    /* Grid Splits */
+    .b2b-grid-rfq {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    .rfq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .suppliers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    /* financing cards */
+    .financing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="omnix-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">⚡</div>
+        <span>OMNIX</span>
+      </a>
+      <div class="nav-links">
+        <a href="marketplace.html" class="nav-link">🛒 Marketplace</a>
+        <a href="quick-commerce.html" class="nav-link">⚡ Quick</a>
+        <a href="social-commerce.html" class="nav-link">📱 Social</a>
+        <a href="ai-agent.html" class="nav-link">🤖 AI Agent</a>
+        <a href="b2b.html" class="nav-link">🏭 B2B</a>
+        <a href="creator-hub.html" class="nav-link">🎨 Creator</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-search" onclick="document.getElementById('searchModal').classList.add('open')">
+          <span>🔍 Search OMNIX...</span>
+        </div>
+        <button class="nav-cart" id="cartBtn" onclick="toggleCart()">
+          <span>🛒</span>
+          <span id="cartCount" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="b2b-container">
+    
+    <!-- B2B Hero banner -->
+    <header class="b2b-hero">
+      <div>
+        <div class="b2b-badge">🏭 Enterprise Sourcing Portal</div>
+        <h1 style="font-family:var(--font-display); font-size:clamp(32px, 5vw, 56px); font-weight:900; line-height:1.1; margin-bottom:16px;">Where Business Gets Done</h1>
+        <p style="color:var(--text-secondary); font-size:16px; max-width:540px; margin-bottom:24px;">Source directly from verified global manufacturers. File RFQs, secure container supply routes, and unlock credit terms up to 90 days.</p>
+        
+        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+          <a href="#postRfq" class="btn btn-amber magnetic">Post RFQ Requirement</a>
+          <button class="btn btn-secondary" onclick="showToast('📈 Live trade directories loading...', 'info')">Supplier Directory</button>
+        </div>
+      </div>
+      
+      <!-- Stats panel -->
+      <div class="panel-card" style="border-color: rgba(245, 158, 11, 0.3);">
+        <h3 style="font-family:var(--font-display); font-size:15px; margin-bottom:20px; text-transform:uppercase; color:var(--text-muted);">Trade Volume & Reach</h3>
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:20px;">
+          <div>
+            <div style="font-size:24px; font-weight:800; font-family:var(--font-display); color:white;">500K+</div>
+            <div style="font-size:11px; color:var(--text-muted);">Verified Factories</div>
+          </div>
+          <div>
+            <div style="font-size:24px; font-weight:800; font-family:var(--font-display); color:white;">₹2.8T</div>
+            <div style="font-size:11px; color:var(--text-muted);">Annual B2B GMV</div>
+          </div>
+          <div>
+            <div style="font-size:24px; font-weight:800; font-family:var(--font-display); color:white;">50+</div>
+            <div style="font-size:11px; color:var(--text-muted);">Countries Serviced</div>
+          </div>
+          <div>
+            <div style="font-size:24px; font-weight:800; font-family:var(--font-display); color:white;">98.7%</div>
+            <div style="font-size:11px; color:var(--text-muted);">Fulfillment Score</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sourcing Categories Tabs -->
+    <section class="tabs-row">
+      <div class="tab-item active" onclick="switchCategory('Manufacturing')">Heavy Manufacturing</div>
+      <div class="tab-item" onclick="switchCategory('Electronics')">Electronics Components</div>
+      <div class="tab-item" onclick="switchCategory('Textiles')">Textiles & Fabric</div>
+      <div class="tab-item" onclick="switchCategory('Agriculture')">Agriculture Wholesale</div>
+      <div class="tab-item" onclick="switchCategory('Chemicals')">Industrial Chemicals</div>
+      <div class="tab-item" onclick="switchCategory('Packaging')">Packaging Materials</div>
+    </section>
+
+    <!-- RFQ section (Post + List) -->
+    <section class="b2b-grid-rfq" id="postRfq">
+      <!-- Post Form Card -->
+      <div class="panel-card" style="border-color: rgba(245, 158, 11, 0.2);">
+        <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; margin-bottom:8px;">Post Your Sourcing Requirement</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Receive factory-direct quotations from verified OMNIX suppliers within 24 hours.</p>
+        
+        <form id="rfqForm" onsubmit="handleRfqSubmit(event)" style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">Product / Material Name</label>
+              <input type="text" class="input" id="rfqName" placeholder="e.g. Copper wire coils" required>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">Required Quantity</label>
+              <input type="text" class="input" id="rfqQty" placeholder="e.g. 5,000 units" required>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">Target Price per Unit</label>
+              <input type="text" class="input" id="rfqPrice" placeholder="e.g. ₹420/unit" required>
+            </div>
+            <div>
+              <label style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">Delivery Location</label>
+              <input type="text" class="input" id="rfqLoc" placeholder="e.g. Warehouse, Chennai" required>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:6px;">Detailed Specifications</label>
+            <textarea class="input" id="rfqSpecs" rows="3" placeholder="Enter purity certifications, gauge widths, custom prints..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-amber" style="width:100%;">Submit RFQ Broadcast</button>
+        </form>
+      </div>
+
+      <!-- Live RFQ Board -->
+      <div class="panel-card">
+        <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; margin-bottom:8px;">Live Sourcing Board</h3>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Active RFQ requests currently bidding across verified dark factories.</p>
+        
+        <div class="rfq-list" id="rfqList">
+          <!-- RFQ 1 -->
+          <div class="rfq-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+              <div>
+                <h4 style="font-size:15px; font-weight:700;">10,000 Electric Motors (DC Brushless)</h4>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Requested by: Tata Motors supplier</p>
+              </div>
+              <span class="rfq-status open">● Active (12 bids)</span>
+            </div>
+            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Specifications: 12V DC, 4500RPM, CE certifications required for automotive build.</div>
+            <div style="font-size:11px; color:var(--text-muted); display:flex; gap:16px;">
+              <span>Target: ₹850/unit</span>
+              <span>Delivery: Pune</span>
+            </div>
+          </div>
+
+          <!-- RFQ 2 -->
+          <div class="rfq-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+              <div>
+                <h4 style="font-size:15px; font-weight:700;">50,000 Meters Cotton Denim Fabric</h4>
+                <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Requested by: Inditex Vendor</p>
+              </div>
+              <span class="rfq-status pending">● Reviewing (4 bids)</span>
+            </div>
+            <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">Specifications: 12oz weight, indigo dyed warp, cotton-poly blend.</div>
+            <div style="font-size:11px; color:var(--text-muted); display:flex; gap:16px;">
+              <span>Target: ₹120/meter</span>
+              <span>Delivery: Surat</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verified Suppliers Grid -->
+    <section style="margin-bottom:48px;">
+      <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; margin-bottom:8px;">Ecosystem Verified Suppliers</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Suppliers audited for quality standards, fulfillment rates, and financial stability.</p>
+      
+      <div class="suppliers-grid">
+        <!-- Supplier 1 -->
+        <div class="supplier-card" onclick="showToast(' टाटा Steel Sourcing window loading...', 'info')">
+          <div class="supplier-avatar">🏭</div>
+          <div style="flex:1;">
+            <div class="supplier-name">Tata Steel Sourcing Hub <span class="supplier-verified">✅ Verified</span></div>
+            <div class="supplier-meta">Jamshedpur, Jharkhand • High-strength carbon sheets, structural beams</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">MOQ: 10 Tons • Fulfillment rating: 99.4%</div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Contact</button>
+        </div>
+
+        <!-- Supplier 2 -->
+        <div class="supplier-card" onclick="showToast('Mahindra Automotive window loading...', 'info')">
+          <div class="supplier-avatar">⚙️</div>
+          <div style="flex:1;">
+            <div class="supplier-name">Mahindra Engine Components <span class="supplier-verified">✅ Verified</span></div>
+            <div class="supplier-meta">Nasik, Maharashtra • Gears, pistons, casting blocks</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">MOQ: 1,000 units • Fulfillment rating: 98.7%</div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Contact</button>
+        </div>
+
+        <!-- Supplier 3 -->
+        <div class="supplier-card" onclick="showToast('Reliance Petrochem window loading...', 'info')">
+          <div class="supplier-avatar">🧪</div>
+          <div style="flex:1;">
+            <div class="supplier-name">Reliance Polymers Division <span class="supplier-verified">✅ Verified</span></div>
+            <div class="supplier-meta">Hazira, Gujarat • Polypropylene bags, masterbatches</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">MOQ: 5 Tons • Fulfillment rating: 99.1%</div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Contact</button>
+        </div>
+
+        <!-- Supplier 4 -->
+        <div class="supplier-card" onclick="showToast('Gujarat Textiles window loading...', 'info')">
+          <div class="supplier-avatar">🧵</div>
+          <div style="flex:1;">
+            <div class="supplier-name">Gujarat Cotton Fabrics <span class="supplier-verified">✅ Verified</span></div>
+            <div class="supplier-meta">Ahmedabad, Gujarat • Mercerized cotton warp, organic canvas</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">MOQ: 2,000 meters • Fulfillment rating: 97.9%</div>
+          </div>
+          <button class="btn btn-ghost btn-sm">Contact</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trade Financing -->
+    <section style="margin-bottom:48px;">
+      <h3 style="font-family:var(--font-display); font-size:20px; font-weight:800; margin-bottom:8px;">OMNIX Trade Credit & Financing</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Unlock working capital loans, lines of credit, and Letters of Credit dynamically backed by escrow analytics.</p>
+      
+      <div class="financing-grid">
+        <div class="trust-card" style="border-color: rgba(245, 158, 11, 0.2);">
+          <div class="trust-icon">📅</div>
+          <h4 class="trust-title">Net 30/60/90 Terms</h4>
+          <p class="trust-desc">Execute bulk orders and pay 30, 60, or 90 days post delivery. Interest rates start at 1.2% per month.</p>
+        </div>
+        <div class="trust-card" style="border-color: rgba(245, 158, 11, 0.2);">
+          <div class="trust-icon">📄</div>
+          <h4 class="trust-title">Letter of Credit (LC)</h4>
+          <p class="trust-desc">Secured via partner banks. Protects transactions against delivery delay and quality failures.</p>
+        </div>
+        <div class="trust-card" style="border-color: rgba(245, 158, 11, 0.2);">
+          <div class="trust-icon">💳</div>
+          <h4 class="trust-title">Ecosystem Trade Credit</h4>
+          <p class="trust-desc">Pre-approved credit limits based on transaction ratings on the platform. Single-click credit activation.</p>
+        </div>
+        <div class="trust-card" style="border-color: rgba(245, 158, 11, 0.2);">
+          <div class="trust-icon">🏦</div>
+          <h4 class="trust-title">Invoice Discounting</h4>
+          <p class="trust-desc">Get paid instantly for fulfilled orders. Sell your buyer invoices to banking partners on OMNIX.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Universal Footer -->
+  <footer style="background: var(--color-deep); border-top: 1px solid var(--color-border); padding: 80px 0 30px; margin-top: 80px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 24px; max-width: var(--container-max); margin: 0 auto;">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom: 16px;">
+          <div class="nav-logo-icon">⚡</div>
+          <span>OMNIX</span>
+        </a>
+        <p class="footer-brand-desc">The universal commerce operating layer. Powering consumer transactions, quick-delivery routes, B2B wholesale pipelines, and creator platforms globally.</p>
+      </div>
+      <div class="footer-links-col">
+        <h5>Operating Modules</h5>
+        <a href="marketplace.html" class="footer-link">🛒 Consumer Marketplace</a>
+        <a href="quick-commerce.html" class="footer-link">⚡ Hyperlocal Quick</a>
+        <a href="b2b.html" class="footer-link">🏭 B2B Sourcing</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/omnix-core.js"></script>
+  <script>
+    function switchCategory(cat) {
+      showToast(`Filter applied: Sourcing for "${cat}" directories`, 'info');
+      // Simple toggle tab active states
+      document.querySelectorAll('.tab-item').forEach(el => {
+        el.classList.toggle('active', el.textContent.includes(cat));
+      });
+    }
+
+    function handleRfqSubmit(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('rfqName').value;
+      const qty = document.getElementById('rfqQty').value;
+      const price = document.getElementById('rfqPrice').value;
+      const loc = document.getElementById('rfqLoc').value;
+      const specs = document.getElementById('rfqSpecs').value;
+
+      const rfqItem = document.createElement('div');
+      rfqItem.className = 'rfq-card';
+      rfqItem.style.borderColor = "var(--amber)";
+      rfqItem.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+          <div>
+            <h4 style="font-size:15px; font-weight:700;">${qty} ${name}</h4>
+            <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Requested by: Alex Kumar (OMNIX GOLD)</p>
+          </div>
+          <span class="rfq-status open" style="background:var(--amber-dim); color:var(--amber-light); border-color:var(--amber);">● Broadcasting (Bidding Open)</span>
+        </div>
+        <div style="font-size:13px; color:var(--text-secondary); margin-bottom:8px;">${specs}</div>
+        <div style="font-size:11px; color:var(--text-muted); display:flex; gap:16px;">
+          <span>Target: ${price}</span>
+          <span>Delivery: ${loc}</span>
+        </div>
+      `;
+
+      const list = document.getElementById('rfqList');
+      list.insertBefore(rfqItem, list.firstChild);
+      
+      // Clear form
+      document.getElementById('rfqForm').reset();
+      showToast('🎉 RFQ broadcast launched across ecosystem factories!', 'success');
+      showConfetti();
+    }
+  </script>
+</body>
+</html>

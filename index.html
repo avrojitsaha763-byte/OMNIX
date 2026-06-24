@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — The Commerce Operating System for Humanity</title>
+  <meta name="description" content="OMNIX unifies buying, selling, renting, B2B, creator storefronts, and 10-minute quick commerce under one AI-native operating system.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    /* Hero Section Styling */
+    .hero-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+      background: radial-gradient(circle at 50% 30%, rgba(124, 58, 237, 0.08) 0%, rgba(5, 5, 10, 1) 70%), url('assets/images/hero-bg.png') no-repeat center center/cover;
+      overflow: hidden;
+    }
+    
+    .hero-glow-1 {
+      position: absolute;
+      top: 25%;
+      left: 30%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+      z-index: 0;
+    }
+
+    .hero-glow-2 {
+      position: absolute;
+      bottom: 20%;
+      right: 25%;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: clamp(48px, 8vw, 104px);
+      font-family: var(--font-display);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 24px;
+      animation: pageEnter 0.8s var(--transition-spring);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.5vw, 24px);
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 40px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: pageEnter 1s var(--transition-spring);
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 64px;
+      animation: pageEnter 1.2s var(--transition-spring);
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 40px 60px;
+      padding: 32px;
+      background: rgba(17, 17, 32, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-2xl);
+      max-width: 800px;
+      margin: 0 auto;
+      animation: pageEnter 1.4s var(--transition-spring);
+    }
+
+    .hero-stat-item {
+      text-align: center;
+    }
+
+    .hero-stat-val {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 800;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .hero-stat-lbl {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Live Ticker Styling */
+    .live-ticker-section {
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: 16px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Section Headers */
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 60px;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      background: var(--violet-dim);
+      border: 1px solid var(--color-border);
+      color: var(--violet-light);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Module Showcase */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      padding: 0 24px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .module-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: var(--transition-spring);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .module-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px var(--card-hover-glow);
+    }
+
+    .module-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: var(--icon-bg);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .module-info h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .module-info p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .module-link {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--card-color);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .module-link span {
+      transition: transform 0.2s;
+    }
+
+    .module-card:hover .module-link span {
+      transform: translateX(4px);
+    }
+
+    /* AI Showcase Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 240px;
+      gap: 24px;
+      padding: 0 24px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .bento-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .bento-item-1 { grid-column: span 2; grid-row: span 2; }
+    .bento-item-2 { grid-column: span 1; grid-row: span 2; }
+    .bento-item-3 { grid-column: span 1; grid-row: span 1; }
+    .bento-item-4 { grid-column: span 2; grid-row: span 1; }
+
+    /* Flash Deals Section */
+    .deals-scroll-container {
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Trust Pillars */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 0 24px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .trust-card {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px 24px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .trust-icon {
+      font-size: 36px;
+    }
+
+    .trust-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .trust-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Stats Bento */
+    .stats-bento-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 0 24px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+    .stat-bento-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+
+    .stat-bento-card.double {
+      grid-column: span 2;
+    }
+
+    .stat-bento-val {
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 8px;
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-bento-lbl {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="omnix-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">⚡</div>
+        <span>OMNIX</span>
+      </a>
+      <div class="nav-links">
+        <a href="marketplace.html" class="nav-link">🛒 Marketplace</a>
+        <a href="quick-commerce.html" class="nav-link">⚡ Quick</a>
+        <a href="social-commerce.html" class="nav-link">📱 Social</a>
+        <a href="ai-agent.html" class="nav-link">🤖 AI Agent</a>
+        <a href="b2b.html" class="nav-link">🏭 B2B</a>
+        <a href="creator-hub.html" class="nav-link">🎨 Creator</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-search" onclick="document.getElementById('searchModal').classList.add('open')">
+          <span>🔍 Search OMNIX...</span>
+        </div>
+        <button class="nav-cart" id="cartBtn" onclick="toggleCart()">
+          <span>🛒</span>
+          <span id="cartCount" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <canvas id="heroParticles" class="particle-canvas"></canvas>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-content">
+      <h1 class="hero-title text-gradient">OMNIX</h1>
+      <p class="hero-subtitle">The Commerce Operating System for Humanity. Buy, sell, rent, auction, hire, source, and deliver hyperlocally — unified by intelligence.</p>
+      <div class="hero-actions">
+        <a href="marketplace.html" class="btn btn-primary btn-lg magnetic">Start Shopping →</a>
+        <a href="ai-agent.html" class="btn btn-secondary btn-lg magnetic">Talk to AI Agent</a>
+      </div>
+      
+      <!-- Live Stats Row -->
+      <div class="hero-stats">
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" data-counter="1.2" data-suffix="B+" data-duration="2500">0</div>
+          <div class="hero-stat-lbl">Global Users</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" data-counter="48" data-prefix="₹" data-suffix="T" data-duration="3000">0</div>
+          <div class="hero-stat-lbl">Annual GMV</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" data-counter="200" data-suffix="M+" data-duration="2000">0</div>
+          <div class="hero-stat-lbl">Live Products</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-val" data-counter="50" data-suffix="M+" data-duration="2200">0</div>
+          <div class="hero-stat-lbl">Verified Sellers</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Ticker -->
+  <section class="live-ticker-section">
+    <div class="marquee-container">
+      <div class="marquee-track">
+        <span class="marquee-item">📦 Rohan S. just bought Sony WH-1000XM6 for ₹26,990</span>
+        <span class="marquee-item">⚡ 10-min delivery completed in Mumbai - 847th today!</span>
+        <span class="marquee-item">🤖 AI Agent saved ₹12,400 for Priya M. in 3 minutes</span>
+        <span class="marquee-item">🏆 New seller: TechZone India crossed ₹1Cr in sales today!</span>
+        <span class="marquee-item">🎨 Priya Sharma storefront builder received 24K visits</span>
+        <span class="marquee-item">🏭 Bulk RFQ submitted for 10,000 Electric Motors (Tata Motors)</span>
+        <span class="marquee-item">📦 Rohan S. just bought Sony WH-1000XM6 for ₹26,990</span>
+        <span class="marquee-item">⚡ 10-min delivery completed in Mumbai - 847th today!</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Module Showcase Section -->
+  <section style="padding: 100px 0; background: var(--color-void);">
+    <div class="section-header">
+      <span class="section-badge">Master System</span>
+      <h2 class="section-title">The Unified Core Modules</h2>
+      <p class="section-desc">One infrastructure, infinite possibilities. Unifying every form of digital and physical commerce into a single operating experience.</p>
+    </div>
+    
+    <div class="showcase-grid">
+      <!-- 1. E-Commerce -->
+      <div class="module-card" style="--card-hover-border: rgba(124, 58, 237, 0.4); --card-hover-glow: rgba(124, 58, 237, 0.15); --icon-bg: var(--violet-dim); --card-color: var(--violet-light);" onclick="window.location.href='marketplace.html'">
+        <div class="module-icon-wrap">🛒</div>
+        <div class="module-info">
+          <h3>E-Commerce Marketplace</h3>
+          <p>Explore millions of consumer goods, luxury brands, digital files, and subscriptions with AI matching and instant checkout.</p>
+        </div>
+        <div class="module-link">Go to Marketplace <span>→</span></div>
+      </div>
+      
+      <!-- 2. Quick Commerce -->
+      <div class="module-card" style="--card-hover-border: rgba(6, 182, 212, 0.4); --card-hover-glow: rgba(6, 182, 212, 0.15); --icon-bg: var(--cyan-dim); --card-color: var(--cyan-light);" onclick="window.location.href='quick-commerce.html'">
+        <div class="module-icon-wrap">⚡</div>
+        <div class="module-info">
+          <h3>Quick Commerce</h3>
+          <p>Get daily essentials, fresh food, and emergency supplies delivered in under 10 minutes from micro-warehouses near you.</p>
+        </div>
+        <div class="module-link">Explore Hyperlocal <span>→</span></div>
+      </div>
+      
+      <!-- 3. Social Commerce -->
+      <div class="module-card" style="--card-hover-border: rgba(244, 63, 94, 0.4); --card-hover-glow: rgba(244, 63, 94, 0.15); --icon-bg: var(--rose-dim); --card-color: #FB7185;" onclick="window.location.href='social-commerce.html'">
+        <div class="module-icon-wrap">📱</div>
+        <div class="module-info">
+          <h3>Social Commerce</h3>
+          <p>Watch creator reels, live shopping broadcasts, and buy products tagged directly inside visual content feeds.</p>
+        </div>
+        <div class="module-link">Watch Social Feed <span>→</span></div>
+      </div>
+
+      <!-- 4. AI Shopping Agent -->
+      <div class="module-card" style="--card-hover-border: rgba(124, 58, 237, 0.4); --card-hover-glow: rgba(124, 58, 237, 0.15); --icon-bg: var(--violet-dim); --card-color: var(--violet-light);" onclick="window.location.href='ai-agent.html'">
+        <div class="module-icon-wrap">🤖</div>
+        <div class="module-info">
+          <h3>AI Shopping Agent</h3>
+          <p>Your autonomous shopper. Delegate complex requests, compare products, negotiate discounts, and auto-restock pantry.</p>
+        </div>
+        <div class="module-link">Talk to Agent <span>→</span></div>
+      </div>
+
+      <!-- 5. B2B Marketplace -->
+      <div class="module-card" style="--card-hover-border: rgba(245, 158, 11, 0.4); --card-hover-glow: rgba(245, 158, 11, 0.15); --icon-bg: var(--amber-dim); --card-color: var(--amber-light);" onclick="window.location.href='b2b.html'">
+        <div class="module-icon-wrap">🏭</div>
+        <div class="module-info">
+          <h3>B2B Sourcing</h3>
+          <p>Direct manufacturer connections, global cargo shipping, trade financing credit, and bulk Request for Quotations (RFQs).</p>
+        </div>
+        <div class="module-link">Enter B2B Portal <span>→</span></div>
+      </div>
+
+      <!-- 6. Creator Hub -->
+      <div class="module-card" style="--card-hover-border: rgba(16, 185, 129, 0.4); --card-hover-glow: rgba(16, 185, 129, 0.15); --icon-bg: var(--emerald-dim); --card-color: #34D399;" onclick="window.location.href='creator-hub.html'">
+        <div class="module-icon-wrap">🎨</div>
+        <div class="module-info">
+          <h3>Creator Hub</h3>
+          <p>Equipping creators with custom storefront builders, digital product uploads, affiliate tracking, and audience metrics.</p>
+        </div>
+        <div class="module-link">Build Storefront <span>→</span></div>
+      </div>
+
+      <!-- 7. Seller Command Center -->
+      <div class="module-card" style="--card-hover-border: rgba(124, 58, 237, 0.3); --card-hover-glow: rgba(124, 58, 237, 0.1);" onclick="window.location.href='seller-studio.html'">
+        <div class="module-icon-wrap">🏪</div>
+        <div class="module-info">
+          <h3>Seller Studio</h3>
+          <p>Comprehensive analytics dashboard, instant payout controls, multi-store logistics, and AI campaign generator.</p>
+        </div>
+        <div class="module-link">Open Studio <span>→</span></div>
+      </div>
+
+      <!-- 8. User Dashboard -->
+      <div class="module-card" style="--card-hover-border: rgba(6, 182, 212, 0.3); --card-hover-glow: rgba(6, 182, 212, 0.1);" onclick="window.location.href='dashboard.html'">
+        <div class="module-icon-wrap">👤</div>
+        <div class="module-info">
+          <h3>Personal Command Center</h3>
+          <p>Manage order logistics, check unified digital wallet balance, view cashback metrics, and view loyalty leveling status.</p>
+        </div>
+        <div class="module-link">Open Dashboard <span>→</span></div>
+      </div>
+
+      <!-- 9. Security & Trust -->
+      <div class="module-card" style="--card-hover-border: rgba(6, 182, 212, 0.3); --card-hover-glow: rgba(6, 182, 212, 0.1);" onclick="showToast('🔒 OMNIX Shield is actively guarding your sessions.', 'success')">
+        <div class="module-icon-wrap">🔒</div>
+        <div class="module-info">
+          <h3>Shield & Safeguard</h3>
+          <p>Zero-trust cryptographic security, AI-monitored escrow protection, automated identity verification, and anti-fraud shield.</p>
+        </div>
+        <div class="module-link">View Security Details <span>→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Bento Showcase Section -->
+  <section style="padding: 100px 0; background: var(--color-deep);">
+    <div class="section-header">
+      <span class="section-badge" style="background: var(--cyan-dim); border-color: rgba(6, 182, 212, 0.3); color: var(--cyan-light);">OMNIX AI</span>
+      <h2 class="section-title">Cognitive Commerce Engine</h2>
+      <p class="section-desc">Traditional shopping is friction-heavy. OMNIX injects state-of-the-art neural intelligence to manage, source, and transact on your behalf.</p>
+    </div>
+    
+    <div class="bento-grid">
+      <!-- 1. AI Shopping Agent -->
+      <div class="bento-item bento-item-1 card-glow" style="border-color: rgba(124, 58, 237, 0.3);">
+        <div>
+          <span style="font-size: 40px;">🤖</span>
+          <h3 style="font-family: var(--font-display); font-size: 24px; font-weight: 700; margin-top: 16px;">Unified AI Assistant</h3>
+          <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; max-width: 480px;">Delegating transactions has never been simpler. Instruct OMNIX to negotiate directly with suppliers, curate matching components, choose optimized shipping pathways, and apply promo codes dynamically.</p>
+        </div>
+        <a href="ai-agent.html" class="btn btn-ghost btn-sm" style="align-self: flex-start;">Open AI Agent Console →</a>
+      </div>
+      
+      <!-- 2. Visual & Voice Commerce -->
+      <div class="bento-item bento-item-2" style="border-color: rgba(6, 182, 212, 0.2);">
+        <div>
+          <span style="font-size: 40px;">🎙️</span>
+          <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-top: 16px;">Sensory Sourcing</h3>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-top: 8px;">Upload snapshots of fashion styles or equipment components. Speak in conversational phrases to locate, filter, and purchase products instantly.</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-ghost btn-sm" style="flex: 1;" onclick="showToast('📷 Camera scan initialized.', 'info')">Scan Image</button>
+          <button class="btn btn-ghost btn-sm" style="flex: 1;" onclick="showToast('🎙️ Listening for commands...', 'info')">Voice</button>
+        </div>
+      </div>
+      
+      <!-- 3. AI Negotiator -->
+      <div class="bento-item bento-item-3" style="border-color: rgba(245, 158, 11, 0.2);">
+        <h3 style="font-family: var(--font-display); font-size: 18px; font-weight: 700;">Negotiator 💬</h3>
+        <p style="color: var(--text-muted); font-size: 13px; margin: 8px 0;">OMNIX negotiates with sellers in real time to secure custom wholesale discounts on bulk requests.</p>
+        <div style="font-family: var(--font-mono); font-size: 13px; color: var(--emerald);">Saved 12% on average</div>
+      </div>
+      
+      <!-- 4. Smart Pantry Auto-Replenishment -->
+      <div class="bento-item bento-item-4" style="border-color: rgba(16, 185, 129, 0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 20px; font-weight: 700;">Smart Pantry Management</h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 4px; max-width: 400px;">The AI tracks household usage metrics, warning you before you run out of essential stock and executing auto-delivery commands.</p>
+          </div>
+          <span style="font-size: 32px;">🥛</span>
+        </div>
+        <div style="display: flex; gap: 12px; font-size: 12px; border-top: 1px solid var(--color-border); padding-top: 12px; margin-top: 12px;">
+          <span style="color: var(--rose);">🥛 Milk: 1 day left</span>
+          <span style="color: var(--amber);">🍚 Rice: 4 days left</span>
+          <span style="color: var(--emerald);">🧼 Detergent: Refilled</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flash Deals Section -->
+  <section style="padding: 100px 0; background: var(--color-void);">
+    <div class="section-header">
+      <span class="section-badge" style="background: var(--rose-dim); border-color: rgba(244, 63, 94, 0.3); color: var(--rose);">Time Critical</span>
+      <h2 class="section-title">Universal Flash Sales</h2>
+      <p class="section-desc">Synchronized deal streams. Hot price margins direct from brands. Refreshes in: <span id="masterCountdown" style="font-family: var(--font-mono); color: var(--rose); font-weight: 700;">02:14:48</span></p>
+    </div>
+    
+    <div class="deals-scroll-container">
+      <div class="scroll-row">
+        <!-- Deal 1 -->
+        <div class="deal-card" onclick="addToCart('d1', 'iPhone 16 Pro 256GB', 'Apple', 109900, '📱')">
+          <div class="deal-card-badge">12% OFF</div>
+          <div class="deal-card-img">📱</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">iPhone 16 Pro (Black Titanium)</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹1,09,900</span>
+              <span class="deal-card-og">₹1,19,900</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 82%;"></div></div>
+            <div class="deal-card-sold">82% Claimed</div>
+          </div>
+        </div>
+
+        <!-- Deal 2 -->
+        <div class="deal-card" onclick="addToCart('d2', 'Sony WH-1000XM6', 'Sony', 26990, '🎧')">
+          <div class="deal-card-badge">20% OFF</div>
+          <div class="deal-card-img">🎧</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Sony WH-1000XM6 ANC</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹26,990</span>
+              <span class="deal-card-og">₹32,990</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 45%;"></div></div>
+            <div class="deal-card-sold">45% Claimed</div>
+          </div>
+        </div>
+
+        <!-- Deal 3 -->
+        <div class="deal-card" onclick="addToCart('d3', 'Air Max 2026', 'Nike', 12490, '👟')">
+          <div class="deal-card-badge">30% OFF</div>
+          <div class="deal-card-img">👟</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Nike Air Max 2026 Edition</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹12,490</span>
+              <span class="deal-card-og">₹17,990</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 61%;"></div></div>
+            <div class="deal-card-sold">61% Claimed</div>
+          </div>
+        </div>
+
+        <!-- Deal 4 -->
+        <div class="deal-card" onclick="addToCart('d4', 'OLED Gaming Monitor 34', 'Samsung', 49990, '🖥️')">
+          <div class="deal-card-badge">15% OFF</div>
+          <div class="deal-card-img">🖥️</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Samsung 34&quot; Curved OLED</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹49,990</span>
+              <span class="deal-card-og">₹58,990</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 29%;"></div></div>
+            <div class="deal-card-sold">29% Claimed</div>
+          </div>
+        </div>
+
+        <!-- Deal 5 -->
+        <div class="deal-card" onclick="addToCart('d5', 'Cyberpunk Mech Keyboard', 'Razer', 8490, '⌨️')">
+          <div class="deal-card-badge">25% OFF</div>
+          <div class="deal-card-img">⌨️</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Razer Huntsman Mech v3</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹8,490</span>
+              <span class="deal-card-og">₹11,490</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 90%;"></div></div>
+            <div class="deal-card-sold">90% Claimed</div>
+          </div>
+        </div>
+
+        <!-- Deal 6 -->
+        <div class="deal-card" onclick="addToCart('d6', 'Organic Coffee Roast', 'Starbucks', 950, '☕')">
+          <div class="deal-card-badge">10% OFF</div>
+          <div class="deal-card-img">☕</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Starbucks Sumatra Whole Bean</div>
+            <div class="deal-card-price-row">
+              <span class="deal-card-price">₹950</span>
+              <span class="deal-card-og">₹1,050</span>
+            </div>
+            <div class="deal-card-bar"><div class="deal-card-fill" style="width: 15%;"></div></div>
+            <div class="deal-card-sold">15% Claimed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Section -->
+  <section style="padding: 100px 0; background: var(--color-deep);">
+    <div class="section-header">
+      <span class="section-badge">Trust & Assurance</span>
+      <h2 class="section-title">Safe-Escrow Protocol</h2>
+      <p class="section-desc">Our cryptographic layer safeguards every exchange. Zero fraud. Instant settlement.</p>
+    </div>
+    
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="trust-icon">🛡️</div>
+        <h3 class="trust-title">Authenticity Shield</h3>
+        <p class="trust-desc">Product metadata checked via blockchain logs. Guaranteed original components or 200% payback.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">📦</div>
+        <h3 class="trust-title">Logistics Promise</h3>
+        <p class="trust-desc">AI route mapping ensures packages arrive in promised slots. Latency automatically returns delivery fees.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">💳</div>
+        <h3 class="trust-title">Escrow Settlements</h3>
+        <p class="trust-desc">Funds are locked in smart escrows. Released to sellers only upon buyer verification or delivery completion.</p>
+      </div>
+      <div class="trust-card">
+        <div class="trust-icon">💸</div>
+        <h3 class="trust-title">Instant Returns</h3>
+        <p class="trust-desc">Single-click returns with micro-couriers picking up items within 30 minutes. Refund issues instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bento -->
+  <section style="padding: 100px 0; background: var(--color-void);">
+    <div class="section-header">
+      <span class="section-badge">Realtime Tracking</span>
+      <h2 class="section-title">OMNIX Global Commerce Ledger</h2>
+      <p class="section-desc">Dynamic monitoring of transactions, requests, and routes processed on the system in real time.</p>
+    </div>
+    
+    <div class="stats-bento-grid">
+      <div class="stat-bento-card">
+        <div class="stat-bento-val" data-counter="8.4" data-suffix="M" data-duration="1500">0</div>
+        <div class="stat-bento-lbl">Daily Deliveries</div>
+      </div>
+      <div class="stat-bento-card double">
+        <div class="stat-bento-val" data-counter="14.8" data-prefix="₹" data-suffix="B" data-duration="2000">0</div>
+        <div class="stat-bento-lbl">Volume Processed Today</div>
+      </div>
+      <div class="stat-bento-card">
+        <div class="stat-bento-val" data-counter="99.98" data-suffix="%" data-duration="1800">0</div>
+        <div class="stat-bento-lbl">Delivery Success Rate</div>
+      </div>
+      <div class="stat-bento-card double">
+        <div class="stat-bento-val" data-counter="4.2" data-suffix="M" data-duration="2200">0</div>
+        <div class="stat-bento-lbl">Active AI Shopping Agents</div>
+      </div>
+      <div class="stat-bento-card double">
+        <div class="stat-bento-val" data-counter="890" style="color: var(--emerald);" data-suffix="K" data-duration="2500">0</div>
+        <div class="stat-bento-lbl">Tons of Carbon Offset</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Universal Footer -->
+  <footer style="background: var(--color-deep); border-top: 1px solid var(--color-border); padding: 80px 0 30px;">
+    <div class="showcase-grid" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 24px; max-width: var(--container-max); margin: 0 auto;">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom: 16px;">
+          <div class="nav-logo-icon">⚡</div>
+          <span>OMNIX</span>
+        </a>
+        <p class="footer-brand-desc">The universal commerce operating layer. Powering consumer transactions, quick-delivery routes, B2B wholesale pipelines, and creator platforms globally.</p>
+        <div class="footer-socials">
+          <div class="footer-social">🌐</div>
+          <div class="footer-social">💬</div>
+          <div class="footer-social">🐦</div>
+          <div class="footer-social">📘</div>
+        </div>
+      </div>
+      
+      <div class="footer-links-col">
+        <h5>Operating Modules</h5>
+        <a href="marketplace.html" class="footer-link">🛒 Consumer Marketplace</a>
+        <a href="quick-commerce.html" class="footer-link">⚡ Hyperlocal Quick</a>
+        <a href="social-commerce.html" class="footer-link">📱 Social Shopping</a>
+        <a href="b2b.html" class="footer-link">🏭 B2B Sourcing</a>
+      </div>
+
+      <div class="footer-links-col">
+        <h5>Sellers & Creators</h5>
+        <a href="seller-studio.html" class="footer-link">🏪 Seller Studio</a>
+        <a href="creator-hub.html" class="footer-link">🎨 Creator Storefronts</a>
+        <a href="dashboard.html" class="footer-link">📊 Performance Metrics</a>
+        <a href="#" class="footer-link" onclick="showToast('📋 Onboarding is open to selected regions.', 'info')">Join Ecosystem</a>
+      </div>
+
+      <div class="footer-links-col">
+        <h5>Corporate Layer</h5>
+        <a href="#" class="footer-link">Shield Protection</a>
+        <a href="#" class="footer-link">API Specifications</a>
+        <a href="#" class="footer-link">Carbon Neutral Policy</a>
+        <a href="#" class="footer-link">Infrastructure Status</a>
+      </div>
+    </div>
+    
+    <div class="footer-bottom" style="max-width: var(--container-max); margin: 40px auto 0; padding: 24px 24px 0; border-top: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 13px;">
+      <div>© 2026 OMNIX Technologies Group. All rights reserved.</div>
+      <div style="display: flex; gap: 24px;">
+        <a href="#" class="footer-link" style="margin: 0;">Privacy Shield</a>
+        <a href="#" class="footer-link" style="margin: 0;">Terms of Sourcing</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/omnix-core.js"></script>
+  <script>
+    // Countdown Timer logic
+    const masterCountdown = document.getElementById('masterCountdown');
+    let totalSeconds = 2 * 3600 + 14 * 60 + 48;
+    setInterval(() => {
+      if (totalSeconds <= 0) totalSeconds = 3600 * 3;
+      totalSeconds--;
+      const hrs = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+      const mins = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+      const secs = (totalSeconds % 60).toString().padStart(2, '0');
+      masterCountdown.textContent = `${hrs}:${mins}:${secs}`;
+    }, 1000);
+  </script>
+</body>
+</html>

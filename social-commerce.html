@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — Social Commerce</title>
+  <meta name="description" content="Watch shoppable video reels, purchase creator bundles, and join live shopping broadcasts.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .social-container {
+      max-width: var(--container-max);
+      margin: 100px auto 60px;
+      padding: 0 24px;
+    }
+
+    /* Stories Row */
+    .stories-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 32px;
+      scrollbar-width: none;
+    }
+
+    .stories-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .story-avatar-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--grad-brand);
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .story-avatar-wrap:hover {
+      transform: scale(1.05);
+    }
+
+    .story-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--color-surface-2);
+      border: 2px solid var(--color-space);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .story-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      max-width: 72px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    /* Layout Split */
+    .social-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .social-feed {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Dynamic overlay tags for shoppable items */
+    .shoppable-tag {
+      position: absolute;
+      background: rgba(17, 17, 32, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+
+    .shoppable-tag:hover {
+      background: var(--violet);
+      border-color: var(--violet-light);
+    }
+
+    .trending-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .trending-tag-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trending-tag-item:hover {
+      border-color: var(--violet);
+      color: var(--violet-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="omnix-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">⚡</div>
+        <span>OMNIX</span>
+      </a>
+      <div class="nav-links">
+        <a href="marketplace.html" class="nav-link">🛒 Marketplace</a>
+        <a href="quick-commerce.html" class="nav-link">⚡ Quick</a>
+        <a href="social-commerce.html" class="nav-link">📱 Social</a>
+        <a href="ai-agent.html" class="nav-link">🤖 AI Agent</a>
+        <a href="b2b.html" class="nav-link">🏭 B2B</a>
+        <a href="creator-hub.html" class="nav-link">🎨 Creator</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-search" onclick="document.getElementById('searchModal').classList.add('open')">
+          <span>🔍 Search OMNIX...</span>
+        </div>
+        <button class="nav-cart" id="cartBtn" onclick="toggleCart()">
+          <span>🛒</span>
+          <span id="cartCount" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="social-container">
+    
+    <!-- Stories Row -->
+    <section class="stories-row">
+      <div class="story-item" onclick="showToast('Opening Neha\'s styling story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">👩</div></div>
+        <div class="story-label">Neha Sharma</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening TechGuru\'s unboxing story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">👨</div></div>
+        <div class="story-label">TechGuru</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Aaditi\'s kitchen story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">👩‍🍳</div></div>
+        <div class="story-label">FoodieAaditi</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Arjun\'s fitness story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">🏃</div></div>
+        <div class="story-label">FitArjun</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Priya\'s design story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">🎨</div></div>
+        <div class="story-label">Priya.Art</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Rohit\'s gaming story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">🎮</div></div>
+        <div class="story-label">GamerRohit</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Kabira\'s travel story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">🎒</div></div>
+        <div class="story-label">KabirTravel</div>
+      </div>
+      <div class="story-item" onclick="showToast('Opening Simran\'s beauty story...', 'info')">
+        <div class="story-avatar-wrap"><div class="story-avatar">💅</div></div>
+        <div class="story-label">SimranBeauty</div>
+      </div>
+    </section>
+
+    <!-- Social Layout -->
+    <div class="social-layout">
+      <!-- LEFT FEED COL -->
+      <section class="social-feed">
+        
+        <!-- Social Post 1 -->
+        <div class="social-card">
+          <div class="social-card-media" style="background: radial-gradient(circle, #2E1065 0%, #0F052D 100%);">
+            👗
+            <!-- Dynamic tags -->
+            <div class="shoppable-tag" style="top:30%; left:25%;" onclick="addToCart('so1', 'Boho Stylist Dress', 'Neha Sharma Selection', 2499, '👗'); event.stopPropagation();">🏷️ Dress ₹2,499</div>
+            <div class="shoppable-tag" style="top:60%; left:50%;" onclick="addToCart('so2', 'Premium Leather Bag', 'Neha Sharma Selection', 3999, '👜'); event.stopPropagation();">🏷️ Leather Bag ₹3,999</div>
+          </div>
+          <div class="social-card-overlay">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--grad-brand); display:flex; align-items:center; justify-content:center; font-size:14px;">👩</div>
+              <div>
+                <div style="font-size:13px; font-weight:700;">Neha Sharma ⭐</div>
+                <div style="font-size:10px; color:var(--text-muted);">Fashion Influencer</div>
+              </div>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Styling my favorite Boho look for this summer season. Both bag & dress are from the OMNIX fashion directory! 👗👜</p>
+            <button class="social-buy-btn" onclick="showToast('🛍️ Loading Boho bundle selection...', 'info')">🛒 Shop This Look Bundle</button>
+          </div>
+          <div class="social-card-actions">
+            <div class="social-action-btn" onclick="animateLike(this)">❤️<span class="social-action-count">45K</span></div>
+            <div class="social-action-btn" onclick="showToast('💬 Comments loading...', 'info')">💬<span class="social-action-count">840</span></div>
+            <div class="social-action-btn" onclick="showToast('📤 Link copied to clipboard.', 'success')">📤</div>
+          </div>
+        </div>
+
+        <!-- Social Post 2 -->
+        <div class="social-card">
+          <div class="social-card-media" style="background: radial-gradient(circle, #0F172A 0%, #020617 100%);">
+            📱
+            <div class="shoppable-tag" style="top:45%; left:40%;" onclick="addToCart('p1', 'iPhone 16 Pro 256GB', 'Apple', 109900, '📱'); event.stopPropagation();">🏷️ iPhone 16 Pro ₹1,09,900</div>
+          </div>
+          <div class="social-card-overlay">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--grad-brand); display:flex; align-items:center; justify-content:center; font-size:14px;">👨</div>
+              <div>
+                <div style="font-size:13px; font-weight:700;">TechGuru Rahul ✅</div>
+                <div style="font-size:10px; color:var(--text-muted);">Hardware Critic</div>
+              </div>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">iPhone 16 Pro Black Titanium unboxing. Sourced via OMNIX logistics within 1 hour. Extremely clean build quality.</p>
+            <button class="social-buy-btn" onclick="addToCart('p1', 'iPhone 16 Pro 256GB', 'Apple', 109900, '📱')">🛒 Buy Now (₹1,09,900)</button>
+          </div>
+          <div class="social-card-actions">
+            <div class="social-action-btn" onclick="animateLike(this)">❤️<span class="social-action-count">12K</span></div>
+            <div class="social-action-btn">💬<span class="social-action-count">230</span></div>
+            <div class="social-action-btn">📤</div>
+          </div>
+        </div>
+
+        <!-- Social Post 3 -->
+        <div class="social-card">
+          <div class="social-card-media" style="background: radial-gradient(circle, #064E3B 0%, #022C22 100%);">
+            🥗
+            <div class="shoppable-tag" style="top:50%; left:35%;" onclick="addToCart('qc1', 'Organic Cow Milk 1L', 'Amul', 85, '🥛'); event.stopPropagation();">🏷️ Organic Milk ₹85</div>
+            <div class="shoppable-tag" style="top:30%; left:60%;" onclick="addToCart('qc2', 'Fresh Onions 1kg', 'VeggieFarm', 60, '🧅'); event.stopPropagation();">🏷️ Fresh Onions ₹60</div>
+          </div>
+          <div class="social-card-overlay">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--grad-brand); display:flex; align-items:center; justify-content:center; font-size:14px;">👩‍🍳</div>
+              <div>
+                <div style="font-size:13px; font-weight:700;">FoodieAaditi ✅</div>
+                <div style="font-size:10px; color:var(--text-muted);">Culinary Artist</div>
+              </div>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Quick salad recipe using fresh organic supplies delivered from OMNIX dark stores in 8 minutes. 🥗</p>
+            <button class="social-buy-btn" onclick="showToast('🛒 All ingredients added to pantry list!', 'success')">🛒 Shop All Ingredients</button>
+          </div>
+          <div class="social-card-actions">
+            <div class="social-action-btn" onclick="animateLike(this)">❤️<span class="social-action-count">88K</span></div>
+            <div class="social-action-btn">💬<span class="social-action-count">1.4K</span></div>
+            <div class="social-action-btn">📤</div>
+          </div>
+        </div>
+
+        <!-- Social Post 4 -->
+        <div class="social-card">
+          <div class="social-card-media" style="background: radial-gradient(circle, #1E1B4B 0%, #030712 100%);">
+            👟
+            <div class="shoppable-tag" style="top:50%; left:45%;" onclick="addToCart('p5', 'Nike Air Max Alpha', 'Nike', 9490, '👟'); event.stopPropagation();">🏷️ Air Max ₹9,490</div>
+          </div>
+          <div class="social-card-overlay">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--grad-brand); display:flex; align-items:center; justify-content:center; font-size:14px;">🏃</div>
+              <div>
+                <div style="font-size:13px; font-weight:700;">FitLife Arjun</div>
+                <div style="font-size:10px; color:var(--text-muted);">Athletic Trainer</div>
+              </div>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Reviewing the cushioning and feedback levels on the new Nike Air Max 2026. Highly recommended for daily runs.</p>
+            <button class="social-buy-btn" onclick="addToCart('p5', 'Nike Air Max Alpha', 'Nike', 9490, '👟')">🛒 Add Shoes to Cart</button>
+          </div>
+          <div class="social-card-actions">
+            <div class="social-action-btn" onclick="animateLike(this)">❤️<span class="social-action-count">34K</span></div>
+            <div class="social-action-btn">💬<span class="social-action-count">480</span></div>
+            <div class="social-action-btn">📤</div>
+          </div>
+        </div>
+
+        <!-- Social Post 5 (LIVE Stream) -->
+        <div class="social-card" style="border-color:var(--rose);">
+          <div class="social-card-media" style="background: radial-gradient(circle, #881337 0%, #4C0519 100%);">
+            🎤
+            <span class="badge badge-live" style="position:absolute; top:20px; left:20px; font-size:12px; padding:4px 12px;">● LIVE SHOPPING</span>
+            <div style="position:absolute; top:20px; right:20px; font-size:11px; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:4px;">👁️ 1.2K Viewers</div>
+          </div>
+          <div class="social-card-overlay">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+              <div style="width:32px; height:32px; border-radius:50%; background:var(--grad-brand); display:flex; align-items:center; justify-content:center; font-size:14px;">💅</div>
+              <div>
+                <div style="font-size:13px; font-weight:700;">Simran Beauty Room ✅</div>
+                <div style="font-size:10px; color:var(--text-muted);">Beauty Specialist</div>
+              </div>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Live unboxing and trial of premium organic serums. Live audience discount active!</p>
+            <button class="social-buy-btn" style="background:var(--grad-rose); box-shadow:0 4px 16px rgba(244,63,94,0.5);" onclick="showToast('🎤 Entering Live shopping feed...', 'info')">👋 Join Broadcast Room</button>
+          </div>
+          <div class="social-card-actions">
+            <div class="social-action-btn" onclick="animateLike(this)">❤️<span class="social-action-count">9K</span></div>
+            <div class="social-action-btn">💬<span class="social-action-count">560</span></div>
+            <div class="social-action-btn">📤</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT TRENDING COL -->
+      <aside class="social-feed" style="gap:24px;">
+        
+        <!-- Trending products -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Trending Sourced from Social</h3>
+          
+          <div class="trending-list">
+            <!-- Item 1 -->
+            <div class="result-small-card" onclick="addToCart('p1', 'iPhone 16 Pro', 'Apple', 109900, '📱')">
+              <div style="font-size:24px;">📱</div>
+              <div style="flex:1;">
+                <div style="font-size:12px; font-weight:700;">iPhone 16 Pro</div>
+                <div style="font-size:11px; color:var(--text-muted);">₹1,09,900</div>
+              </div>
+              <span style="font-size:11px; color:var(--rose); font-weight:700;">🔥 #1 Trending</span>
+            </div>
+            <!-- Item 2 -->
+            <div class="result-small-card" onclick="addToCart('p3', 'Sony WH-1000XM6', 'Sony', 26990, '🎧')">
+              <div style="font-size:24px;">🎧</div>
+              <div style="flex:1;">
+                <div style="font-size:12px; font-weight:700;">Sony WH-1000XM6</div>
+                <div style="font-size:11px; color:var(--text-muted);">₹26,990</div>
+              </div>
+              <span style="font-size:11px; color:var(--text-secondary);">4.2K sold</span>
+            </div>
+            <!-- Item 3 -->
+            <div class="result-small-card" onclick="addToCart('p5', 'Nike Air Max Alpha', 'Nike', 9490, '👟')">
+              <div style="font-size:24px;">👟</div>
+              <div style="flex:1;">
+                <div style="font-size:12px; font-weight:700;">Nike Air Max Alpha</div>
+                <div style="font-size:11px; color:var(--text-muted);">₹9,490</div>
+              </div>
+              <span style="font-size:11px; color:var(--text-secondary);">2.8K sold</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Creators -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Top Sourced Creators</h3>
+          
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
+            <div class="creator-card">
+              <div class="creator-avatar"><div class="creator-avatar" style="font-size:24px; background:none;">👩</div></div>
+              <div class="creator-name">Neha S.</div>
+              <div class="creator-handle">@neha.styles</div>
+            </div>
+            <div class="creator-card">
+              <div class="creator-avatar"><div class="creator-avatar" style="font-size:24px; background:none;">👨</div></div>
+              <div class="creator-name">TechGuru</div>
+              <div class="creator-handle">@tech.guru</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Tags -->
+        <div class="panel-card">
+          <h3 style="font-family:var(--font-display); font-size:16px; font-weight:800; margin-bottom:16px;">Trending Hashtags</h3>
+          <div class="trending-list">
+            <div class="trending-tag-item"><span>#SummerFashion2026</span> <span style="color:var(--text-muted);">48K buys</span></div>
+            <div class="trending-tag-item"><span>#iPhone16Unboxing</span> <span style="color:var(--text-muted);">32K buys</span></div>
+            <div class="trending-tag-item"><span>#OrganicPantryLife</span> <span style="color:var(--text-muted);">24K buys</span></div>
+            <div class="trending-tag-item"><span>#GamingRigBuild</span> <span style="color:var(--text-muted);">18K buys</span></div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- Universal Footer -->
+  <footer style="background: var(--color-deep); border-top: 1px solid var(--color-border); padding: 80px 0 30px; margin-top: 80px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 24px; max-width: var(--container-max); margin: 0 auto;">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom: 16px;">
+          <div class="nav-logo-icon">⚡</div>
+          <span>OMNIX</span>
+        </a>
+        <p class="footer-brand-desc">The universal commerce operating layer. Powering consumer transactions, quick-delivery routes, B2B wholesale pipelines, and creator platforms globally.</p>
+      </div>
+      <div class="footer-links-col">
+        <h5>Operating Modules</h5>
+        <a href="marketplace.html" class="footer-link">🛒 Consumer Marketplace</a>
+        <a href="quick-commerce.html" class="footer-link">⚡ Hyperlocal Quick</a>
+        <a href="social-commerce.html" class="footer-link">📱 Social Shopping</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/omnix-core.js"></script>
+  <script>
+    function animateLike(btn) {
+      // Toggle active color class
+      btn.style.color = btn.style.color === 'var(--rose)' ? '' : 'var(--rose)';
+      btn.style.borderColor = btn.style.color === 'var(--rose)' ? 'var(--rose)' : '';
+      
+      // Simple scaling animation
+      btn.style.transform = 'scale(1.2)';
+      setTimeout(() => btn.style.transform = 'scale(1)', 150);
+      
+      showToast('❤️ Post added to likes folder', 'success');
+    }
+  </script>
+</body>
+</html>

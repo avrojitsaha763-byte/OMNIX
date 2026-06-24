@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMNIX — E-Commerce Marketplace</title>
+  <meta name="description" content="Explore millions of products across electronics, fashion, grocery, luxury, and home with cognitive AI search.">
+  <link rel="stylesheet" href="css/omnix-design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <style>
+    .marketplace-container {
+      max-width: var(--container-max);
+      margin: 100px auto 60px;
+      padding: 0 24px;
+    }
+
+    /* Category Grid */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    /* Layout: Filters Sidebar + Grid */
+    .shop-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Sidebar Filters */
+    .sidebar-filters {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      position: sticky;
+      top: 100px;
+    }
+
+    .filter-group {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 20px;
+    }
+
+    .filter-group:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .filter-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .filter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .filter-checkbox-label input {
+      accent-color: var(--violet);
+    }
+
+    .price-range-inputs {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .price-input {
+      width: 50%;
+      padding: 6px 12px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 13px;
+    }
+
+    /* Products Main Area */
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .ai-recom-strip {
+      background: var(--grad-brand-soft);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin-bottom: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="omnix-nav" id="mainNav">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">⚡</div>
+        <span>OMNIX</span>
+      </a>
+      <div class="nav-links">
+        <a href="marketplace.html" class="nav-link">🛒 Marketplace</a>
+        <a href="quick-commerce.html" class="nav-link">⚡ Quick</a>
+        <a href="social-commerce.html" class="nav-link">📱 Social</a>
+        <a href="ai-agent.html" class="nav-link">🤖 AI Agent</a>
+        <a href="b2b.html" class="nav-link">🏭 B2B</a>
+        <a href="creator-hub.html" class="nav-link">🎨 Creator</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <div class="nav-search" onclick="document.getElementById('searchModal').classList.add('open')">
+          <span>🔍 Search OMNIX...</span>
+        </div>
+        <button class="nav-cart" id="cartBtn" onclick="toggleCart()">
+          <span>🛒</span>
+          <span id="cartCount" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="marketplace-container">
+    
+    <!-- Mega Search Centered -->
+    <div class="mega-search" style="margin-bottom: 48px;">
+      <div class="mega-search-box">
+        <div class="mega-search-mode">🛒 Marketplace</div>
+        <input id="searchQueryInput" class="mega-search-input" placeholder="Search iPhones, Nike shoes, Sony headphones, organic milk...">
+        <div class="mega-search-actions">
+          <button class="search-mode-btn" title="Voice Search" onclick="showToast('🎙️ Listening...', 'info')">🎙️</button>
+          <button class="search-mode-btn" title="Visual Sourcing" onclick="showToast('📷 Opening Camera...', 'info')">📷</button>
+          <button class="mega-search-btn" onclick="executeLocalSearch()">🔍</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="category-grid">
+      <a href="#" class="category-pill" onclick="filterCategory('all')">
+        <span class="category-pill-icon">📦</span>
+        <span class="category-pill-label">All</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Electronics')">
+        <span class="category-pill-icon">💻</span>
+        <span class="category-pill-label">Electronics</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Fashion')">
+        <span class="category-pill-icon">👕</span>
+        <span class="category-pill-label">Fashion</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Grocery')">
+        <span class="category-pill-icon">🥦</span>
+        <span class="category-pill-label">Grocery</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Home')">
+        <span class="category-pill-icon">🏠</span>
+        <span class="category-pill-label">Home</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Beauty')">
+        <span class="category-pill-icon">🧴</span>
+        <span class="category-pill-label">Beauty</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Automotive')">
+        <span class="category-pill-icon">🚗</span>
+        <span class="category-pill-label">Automotive</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Books')">
+        <span class="category-pill-icon">📚</span>
+        <span class="category-pill-label">Books</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Toys')">
+        <span class="category-pill-icon">🧸</span>
+        <span class="category-pill-label">Toys</span>
+      </a>
+      <a href="#" class="category-pill" onclick="filterCategory('Digital')">
+        <span class="category-pill-icon">💾</span>
+        <span class="category-pill-label">Digital</span>
+      </a>
+    </div>
+
+    <!-- AI Picked For You Strip -->
+    <section class="ai-recom-strip">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; display:flex; align-items:center; gap:8px;">🤖 AI Recommendations <span class="badge badge-cyan">Custom for you</span></h3>
+        <span style="font-size:13px; color:var(--text-secondary); cursor:pointer;" onclick="showToast('🤖 Refreshing cognitive match algorithms...', 'info')">Refresh recommendations 🔄</span>
+      </div>
+      <div class="scroll-row">
+        <!-- AI Card 1 -->
+        <div class="deal-card" onclick="addToCart('ai1', 'MacBook Pro M4', 'Apple', 169900, '💻')">
+          <div class="deal-card-img">💻</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">MacBook Pro M4 Pro</div>
+            <div class="deal-card-price">₹1,69,900</div>
+            <div style="font-size:11px; color:var(--cyan-light); font-weight:600; margin-top:4px;">98.4% Match Score</div>
+          </div>
+        </div>
+        <!-- AI Card 2 -->
+        <div class="deal-card" onclick="addToCart('ai2', 'Ultralight Hiking Pack', 'Decathlon', 4890, '🎒')">
+          <div class="deal-card-img">🎒</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Decathlon 50L Hiking Backpack</div>
+            <div class="deal-card-price">₹4,890</div>
+            <div style="font-size:11px; color:var(--cyan-light); font-weight:600; margin-top:4px;">92.1% Match Score</div>
+          </div>
+        </div>
+        <!-- AI Card 3 -->
+        <div class="deal-card" onclick="addToCart('ai3', 'Mechanical Keyboard', 'Keychron', 8990, '⌨️')">
+          <div class="deal-card-img">⌨️</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Keychron K2 Hot-Swappable</div>
+            <div class="deal-card-price">₹8,990</div>
+            <div style="font-size:11px; color:var(--cyan-light); font-weight:600; margin-top:4px;">89.7% Match Score</div>
+          </div>
+        </div>
+        <!-- AI Card 4 -->
+        <div class="deal-card" onclick="addToCart('ai4', 'Premium Matcha Whisk', 'Uji', 1890, '🍵')">
+          <div class="deal-card-img">🍵</div>
+          <div class="deal-card-body">
+            <div class="deal-card-name">Organic Uji Matcha Ceremonial</div>
+            <div class="deal-card-price">₹1,890</div>
+            <div style="font-size:11px; color:var(--cyan-light); font-weight:600; margin-top:4px;">85.3% Match Score</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Shop Layout (Sidebar + Grid) -->
+    <div class="shop-layout">
+      <!-- Sidebar Filters -->
+      <aside class="sidebar-filters">
+        <!-- Delivery -->
+        <div class="filter-group">
+          <h4 class="filter-title">Delivery Speed</h4>
+          <div class="filter-list">
+            <label class="filter-checkbox-label">
+              <input type="checkbox" id="filter-10m"> ⚡ 10-Min Delivery
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" id="filter-sameday" checked> Same Day
+            </label>
+            <label class="filter-checkbox-label">
+              <input type="checkbox" id="filter-free"> Free Shipping
+            </label>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+          <h4 class="filter-title">Price Range</h4>
+          <div class="price-range-inputs">
+            <input type="number" id="price-min" class="price-input" placeholder="Min" value="0">
+            <input type="number" id="price-max" class="price-input" placeholder="Max" value="200000">
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:100%; margin-top:12px;" onclick="applyPriceFilter()">Apply Price</button>
+        </div>
+
+        <!-- Brands -->
+        <div class="filter-group">
+          <h4 class="filter-title">Brand</h4>
+          <div class="filter-list">
+            <label class="filter-checkbox-label"><input type="checkbox" value="Apple" class="brand-check"> Apple</label>
+            <label class="filter-checkbox-label"><input type="checkbox" value="Sony" class="brand-check"> Sony</label>
+            <label class="filter-checkbox-label"><input type="checkbox" value="Nike" class="brand-check"> Nike</label>
+            <label class="filter-checkbox-label"><input type="checkbox" value="Samsung" class="brand-check"> Samsung</label>
+            <label class="filter-checkbox-label"><input type="checkbox" value="Adidas" class="brand-check"> Adidas</label>
+          </div>
+        </div>
+
+        <!-- Rating -->
+        <div class="filter-group">
+          <h4 class="filter-title">Rating</h4>
+          <div class="filter-list">
+            <label class="filter-checkbox-label"><input type="radio" name="rating" value="4"> ⭐ 4 stars & up</label>
+            <label class="filter-checkbox-label"><input type="radio" name="rating" value="3"> ⭐ 3 stars & up</label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Products Grid -->
+      <section>
+        <div class="products-header">
+          <h2 id="resultsHeading" style="font-family:var(--font-display); font-size:22px; font-weight:800;">All Products</h2>
+          <div style="font-size:14px; color:var(--text-secondary);">Showing <span id="productCount">12</span> items</div>
+        </div>
+
+        <div class="products-grid" id="mainProductsGrid">
+          <!-- Products will be generated by JS -->
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Universal Footer -->
+  <footer style="background: var(--color-deep); border-top: 1px solid var(--color-border); padding: 80px 0 30px; margin-top: 80px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px; padding: 0 24px; max-width: var(--container-max); margin: 0 auto;">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="margin-bottom: 16px;">
+          <div class="nav-logo-icon">⚡</div>
+          <span>OMNIX</span>
+        </a>
+        <p class="footer-brand-desc">The universal commerce operating layer. Powering consumer transactions, quick-delivery routes, B2B wholesale pipelines, and creator platforms globally.</p>
+      </div>
+      <div class="footer-links-col">
+        <h5>Operating Modules</h5>
+        <a href="marketplace.html" class="footer-link">🛒 Consumer Marketplace</a>
+        <a href="quick-commerce.html" class="footer-link">⚡ Hyperlocal Quick</a>
+        <a href="social-commerce.html" class="footer-link">📱 Social Shopping</a>
+      </div>
+      <div class="footer-links-col">
+        <h5>Sellers & Creators</h5>
+        <a href="seller-studio.html" class="footer-link">🏪 Seller Studio</a>
+        <a href="creator-hub.html" class="footer-link">🎨 Creator Storefronts</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/omnix-core.js"></script>
+  <script>
+    // Master Product List (at least 12 items)
+    const PRODUCTS = [
+      { id: 'p1', name: 'iPhone 16 Pro 256GB', brand: 'Apple', category: 'Electronics', price: 109900, ogPrice: 119900, emoji: '📱', rating: 4.8 },
+      { id: 'p2', name: 'Samsung Galaxy S25 Ultra', brand: 'Samsung', category: 'Electronics', price: 124999, ogPrice: 139999, emoji: '📲', rating: 4.7 },
+      { id: 'p3', name: 'Sony WH-1000XM6 Noise Cancelling', brand: 'Sony', category: 'Electronics', price: 26990, ogPrice: 32990, emoji: '🎧', rating: 4.9 },
+      { id: 'p4', name: 'MacBook Air M3 15-inch', brand: 'Apple', category: 'Electronics', price: 114900, ogPrice: 124900, emoji: '💻', rating: 4.6 },
+      { id: 'p5', name: 'Nike Air Max Alpha', brand: 'Nike', category: 'Fashion', price: 9490, ogPrice: 11990, emoji: '👟', rating: 4.4 },
+      { id: 'p6', name: 'Adidas Ultraboost Light', brand: 'Adidas', category: 'Fashion', price: 14999, ogPrice: 18999, emoji: '👟', rating: 4.5 },
+      { id: 'p7', name: 'Designer Leather Handbag', brand: 'Gucci', category: 'Fashion', price: 84900, ogPrice: 94900, emoji: '👜', rating: 4.3 },
+      { id: 'p8', name: 'Ergonomic Gaming Chair', brand: 'Razer', category: 'Home', price: 24990, ogPrice: 29990, emoji: '🪑', rating: 4.7 },
+      { id: 'p9', name: 'Organic Premium Oats 1kg', brand: 'True Elements', category: 'Grocery', price: 349, ogPrice: 399, emoji: '🥣', rating: 4.2 },
+      { id: 'p10', name: 'Pure Cold Pressed Coconut Oil', brand: 'MaxCare', category: 'Grocery', price: 490, ogPrice: 550, emoji: '🥥', rating: 4.5 },
+      { id: 'p11', name: 'Hydrating Face Serum', brand: 'Minimalist', category: 'Beauty', price: 699, ogPrice: 799, emoji: '🧴', rating: 4.4 },
+      { id: 'p12', name: 'Automotive Digital Tyre Inflator', brand: 'Bergmann', category: 'Automotive', price: 2490, ogPrice: 3490, emoji: '🚴', rating: 4.1 }
+    ];
+
+    let currentCategory = 'all';
+
+    function renderProducts(list) {
+      const grid = document.getElementById('mainProductsGrid');
+      const countEl = document.getElementById('productCount');
+      if (!grid) return;
+      
+      grid.innerHTML = list.map(p => {
+        const offPct = Math.round(((p.ogPrice - p.price) / p.ogPrice) * 100);
+        return `
+          <div class="product-card" onclick="addToCart('${p.id}', '${p.name}', '${p.brand}', ${p.price}, '${p.emoji}')">
+            <div class="product-card-image">${p.emoji}</div>
+            <div class="product-card-body">
+              <div class="product-card-name">${p.name}</div>
+              <div class="product-card-brand">${p.brand}</div>
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;">
+                <span class="product-card-price">₹${p.price.toLocaleString()}</span>
+                <span class="product-card-price-original">₹${p.ogPrice.toLocaleString()}</span>
+                <span class="product-card-discount">${offPct}% OFF</span>
+              </div>
+              <div style="margin-top:6px; font-size:12px; color:var(--amber);">
+                ${'⭐'.repeat(Math.floor(p.rating))} (${p.rating})
+              </div>
+              <div class="product-card-actions">
+                <button class="btn btn-primary btn-sm" style="flex:1;" onclick="addToCart('${p.id}', '${p.name}', '${p.brand}', ${p.price}, '${p.emoji}'); event.stopPropagation();">Add to Cart</button>
+                <button class="btn btn-ghost btn-sm" onclick="toggleWishlist('${p.id}', '${p.name}', '${p.emoji}'); event.stopPropagation();">❤️</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      countEl.textContent = list.length;
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      const heading = document.getElementById('resultsHeading');
+      heading.textContent = cat === 'all' ? 'All Products' : `${cat} Products`;
+      
+      const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category.toLowerCase() === cat.toLowerCase());
+      renderProducts(filtered);
+    }
+
+    function executeLocalSearch() {
+      const q = document.getElementById('searchQueryInput').value;
+      const heading = document.getElementById('resultsHeading');
+      if (q) {
+        heading.textContent = `Search results for "${q}"`;
+        const filtered = PRODUCTS.filter(p => p.name.toLowerCase().includes(q.toLowerCase()) || p.brand.toLowerCase().includes(q.toLowerCase()) || p.category.toLowerCase().includes(q.toLowerCase()));
+        renderProducts(filtered);
+      } else {
+        filterCategory('all');
+      }
+    }
+
+    function applyPriceFilter() {
+      const min = parseFloat(document.getElementById('price-min').value) || 0;
+      const max = parseFloat(document.getElementById('price-max').value) || 200000;
+      
+      let filtered = PRODUCTS.filter(p => p.price >= min && p.price <= max);
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category.toLowerCase() === currentCategory.toLowerCase());
+      }
+      renderProducts(filtered);
+      showToast(`Applied price filter: ₹${min} - ₹${max}`, 'success');
+    }
+
+    // Check URL query parameters
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        document.getElementById('searchQueryInput').value = q;
+        executeLocalSearch();
+      } else {
+        renderProducts(PRODUCTS);
+      }
+    });
+  </script>
+</body>
+</html>
